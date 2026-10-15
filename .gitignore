@@ -5,3 +5,7 @@ config/__pycache__/
 db.sqlite3
 core/__pycache_
 api/__pycache__
+core/__pycache__/
+api/__pycache__/
+api/serailizers/__pycache__/
+api/views/__pycache__/
