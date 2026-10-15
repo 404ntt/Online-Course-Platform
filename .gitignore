@@ -3,4 +3,5 @@ core/migrations
 config/__pycache__/
 .env
 db.sqlite3
-core/__pycache__/
+core/__pycache_
+api/__pycache__
