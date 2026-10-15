@@ -1,3 +1,5 @@
 from django.contrib import admin
-
-# Register your models here.
+import core.models as model
+admin.site.register(model.CustomUser)
+admin.site.register(model.Lesson)
+admin.site.register(model.Course)
