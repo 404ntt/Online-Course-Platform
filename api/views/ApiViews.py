@@ -1,7 +1,7 @@
 from rest_framework import generics
 from api.serializers import MainSerilizers
-from core.models import Lesson, Course, Enrollment
-from rest_framework.viewsets import ReadOnlyModelViewSet
+from core.models import Lesson, Course, Enrollment, CustomUser
+from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
 from api.permissions.permissions import Isowner, IsTeacher
 
 
@@ -9,7 +9,7 @@ class CourseApiViewset(ReadOnlyModelViewSet):
     queryset = Course.objects.all()
     serializer_class = MainSerilizers.CourseSerializer
 
-class CourseApiRetrieveView(generics.RetrieveUpdateDestroyAPIView):
+class CourseApiView(ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = MainSerilizers.CourseSerializer
     permission_classes = [IsTeacher]
@@ -30,4 +30,6 @@ class EnrollmentApiListView(generics.ListAPIView):
     permission_classes = [Isowner]
 
 class RegisterApiView(generics.CreateAPIView):
+    queryset = CustomUser.objects.all()
     serializer_class = MainSerilizers.RegisterSerializer
+

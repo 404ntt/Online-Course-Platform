@@ -9,4 +9,4 @@ class IsTeacher(BasePermission):
         return request.user.is_authenticated and request.user.role == 'Teacher'
 
     def has_object_permission(self, request, view, obj):
-        return request.user.role == 'Teacher'
+        return request.user == object.teacher

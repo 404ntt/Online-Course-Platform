@@ -1,8 +1,7 @@
 from rest_framework import serializers
 from core import models
-from django.contrib.auth import get_user_model
-User = get_user_model()
 
+User = models.CustomUser
 class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Lesson
