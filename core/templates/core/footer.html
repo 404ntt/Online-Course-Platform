@@ -1,36 +1,21 @@
-<footer class="footer bg-dark text-light mt-auto">
-    <div class="container py-4">
-        <div class="row g-4">
-
-            <div class="col-md-6">
-                <h5 class="fw-bold">CoursePlatform</h5>
-                <p class="text-secondary mb-0">
-                    Bilim oling, yangi ko'nikmalarni o'rganing
-                    va kelajagingizni yarating.
-                </p>
+<footer class="site-footer">
+    <div class="container">
+        <div class="row gy-4 align-items-start">
+            <div class="col-lg-6">
+                <a href="{% url 'home' %}" class="footer-brand">Course<span>Platform</span><b>.</b></a>
+                <p class="footer-description">Bilim oling, yangi ko‘nikmalarni o‘rganing va kelajagingizni yarating.</p>
             </div>
-
-            <div class="col-md-3">
-                <h6 class="fw-bold">Sahifalar</h6>
-                <ul class="list-unstyled">
-                    <li><a href="{% url 'home' %}" class="footer-link">Bosh sahifa</a></li>
-                    <li><a href="{% url 'courses' %}" class="footer-link">Kurslar</a></li>
-                    <li><a href="#" class="footer-link">Dashboard</a></li>
-                </ul>
-            </div>  
-
-            <div class="col-md-3">
-                <h6 class="fw-bold">Aloqa</h6>
-                <p class="text-secondary mb-1">Email: info@example.com</p>
-                <p class="text-secondary mb-0">Online ta'lim platformasi</p>
+            <div class="col-6 col-lg-3">
+                <h6 class="footer-heading">Sahifalar</h6>
+                <a href="{% url 'home' %}" class="footer-link">Bosh sahifa</a>
+                <a href="{% url 'courses' %}" class="footer-link">Kurslar</a>
             </div>
-
+            <div class="col-6 col-lg-3">
+                <h6 class="footer-heading">Platforma</h6>
+                <span class="footer-link">Online ta’lim</span>
+                <span class="footer-link">Bilim va rivojlanish</span>
+            </div>
         </div>
-
-        <hr class="border-secondary">
-
-        <div class="text-center text-secondary">
-            <small>&copy; 2026 CoursePlatform. All rights reserved.</small>
-        </div>
+        <div class="footer-bottom"><span>© {% now "Y" %} CoursePlatform</span><span>Learn. Grow. Build your future.</span></div>
     </div>
 </footer>

@@ -1,133 +1,21 @@
 {% extends 'core/base.html' %}
-{% load static %}
-
-{% block title %}{{ course.name }}{% endblock %}
-
+{% block title %}{{ course.name }} | CoursePlatform{% endblock %}
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
-
-<section class="course-hero">
-    <div class="container">
-        <a href="{% url 'courses' %}" class="back-link">
-            ← Все курсы
-        </a>
-
-        <div class="course-layout">
-            <div class="course-info">
-                <span class="course-badge">ONLINE COURSE</span>
-
-                <h1>{{ course.name }}</h1>
-
-                <p class="course-description">
-                    {{ course.description }}
-                </p>
-
-                <div class="course-meta">
-                    <div class="meta-item">
-                        <span class="meta-label">Преподаватель</span>
-                        <strong>{{ course.teacher.username }}</strong>
-                    </div>
-
-                    <div class="meta-item">
-                        <span class="meta-label">Уроки</span>
-                        <strong>{{ course.lesson_set.count }}</strong>
-                    </div>
-
-                    <div class="meta-item">
-                        <span class="meta-label">Статус</span>
-                        <strong>
-                            {% if course.is_active %}
-                                Активен
-                            {% else %}
-                                Неактивен
-                            {% endif %}
-                        </strong>
-                    </div>
-                </div>
-            </div>
-
-            <div class="enrollment-card">
-                <div class="card-icon">✦</div>
-
-                <h3>Начни обучение</h3>
-                <p>Изучай материал и развивай свои навыки.</p>
-
-                {% if user.is_authenticated %}
-
-                    {% if user == course.teacher %}
-                        <a href="{% url 'lessoncreate' course.id %}"
-                           class="course-button">
-                            + Добавить урок
-                        </a>
-
-                    {% else %}
-                        {% if is_enrolled %}
-                            <div class="enrolled-message">
-                                ✓ Ты записан на курс
-                            </div>
-                        {% else %}
-                            <form method="post"
-                                  action="{% url 'enroll' course.id %}">
-                                {% csrf_token %}
-                                <button type="submit" class="course-button">
-                                    Записаться на курс →
-                                </button>
-                            </form>
-                        {% endif %}
-                    {% endif %}
-
-                {% else %}
-                    <a href="{% url 'login' %}" class="course-button">
-                        Войти для записи →
-                    </a>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="lessons-section">
-    <div class="container">
-        <div class="section-heading">
-            <div>
-                <span class="section-label">ПРОГРАММА</span>
-                <h2>Содержание курса</h2>
-            </div>
-
-            <span class="lessons-count">
-                {{ course.lesson_set.count }} уроков
-            </span>
-        </div>
-
-        <div class="lessons-list">
-            {% for lesson in course.lesson_set.all %}
-                <div class="lesson-item">
-                    <div class="lesson-number">
-                        {{ forloop.counter|stringformat:"02d" }}
-                    </div>
-
-                    <div class="lesson-info">
-                        <h4>{{ lesson.title }}</h4>
-                        <p>Урок {{ forloop.counter }}</p>
-                    </div>
-
-                    {% if user == course.teacher or is_enrolled %}
-                        <a href="{% url 'lesson_detail' lesson.id %}"
-                           class="lesson-link">
-                            Открыть →
-                        </a>
-                    {% else %}
-                        <span class="lesson-locked">🔒</span>
-                    {% endif %}
-                </div>
-            {% empty %}
-                <div class="empty-lessons">
-                    <div class="empty-icon">📚</div>
-                    <h3>Уроков пока нет</h3>
-                    <p>Преподаватель скоро добавит учебные материалы.</p>
-                </div>
-            {% endfor %}
-        </div>
-    </div>
-</section>
+<section class="course-hero"><div class="container"><a href="{% url 'courses' %}" class="back-link">← Barcha kurslar</a><div class="course-layout"><div class="course-info"><span class="course-badge">ONLINE COURSE</span><h1>{{ course.name }}</h1><p class="course-description">{{ course.description }}</p><div class="course-meta"><div class="meta-item"><span class="meta-label">O‘qituvchi</span><strong>{{ course.teacher.username }}</strong></div><div class="meta-item"><span class="meta-label">Darslar</span><strong>{{ lesson.count }}</strong></div><div class="meta-item"><span class="meta-label">Holati</span><strong>{% if course.is_active %}Faol{% else %}Faol emas{% endif %}</strong></div></div></div>
+<div class="enrollment-card"><div class="card-icon">✦</div><h3>O‘qishni boshlang</h3><p>Kurs materiallarini o‘rganing va yangi ko‘nikmalarga ega bo‘ling.</p>
+{% if user.is_authenticated %}
+    {% if user == course.teacher %}
+        <a href="{% url 'create_lesson' course.id %}" class="course-button">+ Dars qo‘shish</a>
+    {% else %}
+        {% if is_enrolled %}<div class="enrolled-message">✓ Siz kursga yozilgansiz</div>
+        {% elif user.role == 'Teacher'%}
+        <div class="enrolled-message"> Siz oqituvchisiz</div>
+        {% else %}<form method="post" action="{% url 'enroll' course.id %}">{% csrf_token %}<button type="submit" class="course-button">Kursga yozilish →</button></form>{% endif %}
+    {% endif %}
+{% else %}<a href="{% url 'login' %}" class="course-button">Yozilish uchun kiring →</a>{% endif %}
+</div></div></div></section>
+<section class="lessons-section"><div class="container"><div class="section-heading"><div><span class="section-label">KURS DASTURI</span><h2>Darslar mazmuni</h2></div><span class="lessons-count">{{ lesson.count }} ta dars</span></div><div class="lessons-list">
+{% for item in lesson %}<article class="lesson-item"><div class="lesson-number">{{ forloop.counter|stringformat:"02d" }}</div><div class="lesson-info"><h4>{{ item.title }}</h4><p>{{ item.content|truncatewords:18 }}</p></div>{% if user == course.teacher or is_enrolled %}<span class="lesson-link">Dars mavjud</span>{% else %}<span class="lesson-locked" title="Kursga yoziling">🔒</span>{% endif %}</article>
+{% empty %}<div class="empty-lessons"><div class="empty-icon">📚</div><h3>Hozircha darslar yo‘q</h3><p>O‘qituvchi tez orada darslarni qo‘shadi.</p></div>{% endfor %}
+</div></div></section>
 {% endblock %}

@@ -2,9 +2,8 @@ from django.shortcuts import render, redirect, resolve_url, get_object_or_404
 import core.models as model
 from django.views import generic
 from django.contrib.auth.views import LoginView, LogoutView
-from core.form import LoginForm, RegisterForm, CreateLesson
+from core.form import LoginForm, RegisterForm, CreateLesson, CreateCourseForm
 from django.urls import reverse_lazy, reverse
-import requests
 from django.contrib import messages
 
 def MainHome(request):
@@ -38,7 +37,6 @@ class Course_Detail(generic.DetailView):
 
 
 class Login(LoginView):
-    template_name = 'core/login.html'
     authentication_form = LoginForm
     redirect_authenticated_user = True
 
@@ -72,7 +70,7 @@ def enrollcourse(request, pk):
     if created:
         messages.success(request, 'Вы успешно записали на курс')
     else:
-        messages.info(request, 'Вы уже запсаны на курс')
+        messages.info(request, 'Вы уже записаны на курс')
     return redirect('course_detail', pk=course.pk)
 
 class LessonCreateView(generic.CreateView):
@@ -85,7 +83,28 @@ class LessonCreateView(generic.CreateView):
             model.Course, pk=self.kwargs['course_id']
         )
         return super().form_valid(form)
-
     def get_success_url(self):
         return reverse('course_detail', kwargs={'pk': self.kwargs['course_id']})
 
+    def get_context_data(self, **kwargs):
+            context = super().get_context_data(**kwargs)
+            context['Title'] = 'Dars'
+            context['desc'] = 'Darsni'
+            return context
+class CourseCreateView(generic.CreateView):
+    model = model.Course
+    form_class = CreateCourseForm 
+    template_name = 'core/lesson_create.html'
+    success_url = reverse_lazy('home')
+
+    def form_valid(self, form):
+        form.instance.teacher = self.request.user
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['Title'] = 'Kurs'
+        context['desc'] = 'Kursni'
+        return context
+
+commit = []

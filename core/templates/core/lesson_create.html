@@ -1,15 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lesson Create</title>
-</head>
-<body>
-    <form method="post">
-        {{ form.as_p }}
-        {% csrf_token %}
-        <button type="submit" >cоздать</button>
-    </form>
-</body>
-</html>
+{% extends 'core/base.html' %}
+{% block title %}{{ Title }} qo‘shish | CoursePlatform{% endblock %}
+{% block content %}
+<section class="form-page"><div class="container"><div class="form-shell"><a href="javascript:history.back()" class="back-link">← Orqaga</a><div class="form-heading"><span class="section-kicker">{{ desc }} MATERIALLARI</span><h1>Yangi <span>{{ Title}} qo‘shish</span></h1><p>{{ Title }} ma’lumotlarini to‘ldiring va saqlang.</p></div><form method="post" class="styled-form">{% csrf_token %}{% if form.non_field_errors %}<div class="form-errors">{{ form.non_field_errors }}</div>{% endif %}{% for field in form %}<div class="form-field"><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}{% for error in field.errors %}<small class="field-error">{{ error }}</small>{% endfor %}</div>{% endfor %}<button type="submit" class="btn-primary-glow w-100">{{ Desc }} saqlash →</button></form></div></div></section>
+{% endblock %}

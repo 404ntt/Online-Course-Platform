@@ -10,5 +10,6 @@ urlpatterns = [
     path('register/', views.Register.as_view(), name='register'),
     path('dashboard/<int:pk>/', views.Dashboard.as_view(), name='dashboard'),
     path('course/<int:pk>/join', views.enrollcourse, name='enroll'),
-    path('course/<int:course_id>/lessoncreate', views.LessonCreateView.as_view(), name='create_lesson')
+    path('course/<int:course_id>/lessoncreate', views.LessonCreateView.as_view(), name='create_lesson'),
+    path('course/<int:pk>/coursecreate', views.CourseCreateView.as_view(), name='create_course')
 ]

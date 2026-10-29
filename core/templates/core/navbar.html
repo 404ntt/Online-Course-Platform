@@ -1,38 +1,26 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg site-navbar">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="{% url 'home' %}">
-            CoursePlatform
-        </a>
-
-        <button class="navbar-toggler" type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarContent">
+        <a class="navbar-brand brand-mark" href="{% url 'home' %}"><span class="brand-symbol">✦</span><span>Course<span class="brand-accent">Platform</span></span></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-
         <div class="collapse navbar-collapse" id="navbarContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'home' %}">Bosh sahifa</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'courses' %}">Kurslar</a>
-                </li>
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0 nav-main-links">
+                <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Bosh sahifa</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'courses' %}">Kurslar</a></li>
             </ul>
-
             {% if not user.is_authenticated %}
-            <div class="d-flex gap-2">
-                <a href="{% url 'login' %}" class="btn btn-outline-light">Login</a>
-                <a href="{% url 'register' %}" class="btn btn-primary">Register</a>
+            <div class="nav-actions">
+                <a href="{% url 'login' %}" class="btn-nav-ghost">Login</a>
+                <a href="{% url 'register' %}" class="btn-nav-primary">Register <span>→</span></a>
             </div>
             {% else %}
-            
-            <div class="d-flex gap-2">
-                <a class="btn btn-outline-light">Hello, {{user.username}}</a>
-                <a href="{% url 'dashboard' user.id %}" class="btn btn-outline-light">Dashboard</a>
-                <form method="post" action="{% url 'logout' %}">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-danger">Logout</button>
+            <div class="nav-actions authenticated-actions">
+                <span class="nav-greeting">Salom, <strong>{{ user.username }}</strong></span>
+                <a href="{% url 'dashboard' user.id %}" class="btn-nav-ghost">Dashboard</a>
+                <form method="post" action="{% url 'logout' %}" class="m-0">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-nav-logout">Logout ↗</button>
                 </form>
             </div>
             {% endif %}
