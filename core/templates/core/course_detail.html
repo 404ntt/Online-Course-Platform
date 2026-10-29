@@ -1,56 +1,133 @@
-<!DOCTYPE html>
+{% extends 'core/base.html' %}
 {% load static %}
-<html lang="uz">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kurs tafsilotlari</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
-<body>
 
+{% block title %}{{ course.name }}{% endblock %}
 
-{% include 'core/navbar.html' %}
-<main class="container py-5">
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
 
-    <h1>{{ course.name }}</h1>
-    <p class="text-muted">O‘qituvchi: {{ course.teacher }}</p>
-    <p>{{ course.description }}</p>
-    <hr>
+<section class="course-hero">
+    <div class="container">
+        <a href="{% url 'courses' %}" class="back-link">
+            ← Все курсы
+        </a>
 
-    <h2>Darslar</h2>
-    
-    {% for i in lesson %}
-    <div class="card mb-3">
-        <div class="card-body">
-            <h5>{{i.order}}.{{i.title}}</h5>
+        <div class="course-layout">
+            <div class="course-info">
+                <span class="course-badge">ONLINE COURSE</span>
+
+                <h1>{{ course.name }}</h1>
+
+                <p class="course-description">
+                    {{ course.description }}
+                </p>
+
+                <div class="course-meta">
+                    <div class="meta-item">
+                        <span class="meta-label">Преподаватель</span>
+                        <strong>{{ course.teacher.username }}</strong>
+                    </div>
+
+                    <div class="meta-item">
+                        <span class="meta-label">Уроки</span>
+                        <strong>{{ course.lesson_set.count }}</strong>
+                    </div>
+
+                    <div class="meta-item">
+                        <span class="meta-label">Статус</span>
+                        <strong>
+                            {% if course.is_active %}
+                                Активен
+                            {% else %}
+                                Неактивен
+                            {% endif %}
+                        </strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="enrollment-card">
+                <div class="card-icon">✦</div>
+
+                <h3>Начни обучение</h3>
+                <p>Изучай материал и развивай свои навыки.</p>
+
+                {% if user.is_authenticated %}
+
+                    {% if user == course.teacher %}
+                        <a href="{% url 'lessoncreate' course.id %}"
+                           class="course-button">
+                            + Добавить урок
+                        </a>
+
+                    {% else %}
+                        {% if is_enrolled %}
+                            <div class="enrolled-message">
+                                ✓ Ты записан на курс
+                            </div>
+                        {% else %}
+                            <form method="post"
+                                  action="{% url 'enroll' course.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="course-button">
+                                    Записаться на курс →
+                                </button>
+                            </form>
+                        {% endif %}
+                    {% endif %}
+
+                {% else %}
+                    <a href="{% url 'login' %}" class="course-button">
+                        Войти для записи →
+                    </a>
+                {% endif %}
+            </div>
         </div>
     </div>
-    {% endfor %}
+</section>
 
-{% if user.is_authenticated %}
-    {% if custom.role == 'Teacher' %}
-        {% if course.teacher_id == user.id %}
-            <a href="#" class="btn btn-primary">Dars qo‘shish</a>
-        {% else %}
-            <h1>Это не ваш курс</h1>
-        {% endif %}
-    {% else %}
-        {% if is_enrolled %}
-            <h1>Вы уже записаны</h1>
-        {% else %}
-            <form method="post" action="{% url 'enroll' course.pk %}">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-success">
-                    Kursga yozilish
-                </button>
-            </form>
-        {% endif %}
-    {% endif %}
-{% endif %}
-</main>
+<section class="lessons-section">
+    <div class="container">
+        <div class="section-heading">
+            <div>
+                <span class="section-label">ПРОГРАММА</span>
+                <h2>Содержание курса</h2>
+            </div>
 
-{% include 'core/footer.html' %}
-</body>
-</html>
+            <span class="lessons-count">
+                {{ course.lesson_set.count }} уроков
+            </span>
+        </div>
+
+        <div class="lessons-list">
+            {% for lesson in course.lesson_set.all %}
+                <div class="lesson-item">
+                    <div class="lesson-number">
+                        {{ forloop.counter|stringformat:"02d" }}
+                    </div>
+
+                    <div class="lesson-info">
+                        <h4>{{ lesson.title }}</h4>
+                        <p>Урок {{ forloop.counter }}</p>
+                    </div>
+
+                    {% if user == course.teacher or is_enrolled %}
+                        <a href="{% url 'lesson_detail' lesson.id %}"
+                           class="lesson-link">
+                            Открыть →
+                        </a>
+                    {% else %}
+                        <span class="lesson-locked">🔒</span>
+                    {% endif %}
+                </div>
+            {% empty %}
+                <div class="empty-lessons">
+                    <div class="empty-icon">📚</div>
+                    <h3>Уроков пока нет</h3>
+                    <p>Преподаватель скоро добавит учебные материалы.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}
