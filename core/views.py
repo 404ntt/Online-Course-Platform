@@ -112,3 +112,4 @@ class CourseCreateView(generic.CreateView):
 class CourseDeleteView(generic.DeleteView):
     model = model.Course
     success_url = reverse_lazy('courses')
+    context_object_name = 'course'
