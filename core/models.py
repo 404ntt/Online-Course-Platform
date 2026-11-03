@@ -23,7 +23,7 @@ class Lesson(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     content = models.TextField()
-    order = models.PositiveIntegerField(unique=True)
+    order = models.PositiveIntegerField()
     added_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

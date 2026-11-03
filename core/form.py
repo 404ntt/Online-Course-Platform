@@ -10,7 +10,7 @@ class RegisterForm(UserCreationForm):
         model = CustomUser
         fields = ['username', 'password1', 'password2']
 
-class CreateLesson(forms.ModelForm):
+class CreateLessonForm(forms.ModelForm):
     class Meta:
         model = Lesson
         fields = ['title', 'content', 'order']
