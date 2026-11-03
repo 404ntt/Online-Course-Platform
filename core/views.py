@@ -58,6 +58,7 @@ class Dashboard(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['enroll'] = model.Enrollment.objects.all()
+        context['course'] = model.Course.objects.all()
         return context
 
 def enrollcourse(request, pk):
@@ -91,6 +92,7 @@ class LessonCreateView(generic.CreateView):
             context['Title'] = 'Dars'
             context['desc'] = 'Darsni'
             return context
+    
 class CourseCreateView(generic.CreateView):
     model = model.Course
     form_class = CreateCourseForm 
@@ -107,4 +109,6 @@ class CourseCreateView(generic.CreateView):
         context['desc'] = 'Kursni'
         return context
 
-commit = []
+class CourseDeleteView(generic.DeleteView):
+    model = model.Course
+    success_url = reverse_lazy('courses')

@@ -7,7 +7,17 @@
 {% if custom.role == 'Teacher' %}
 
 <div class="section-topline"><div><span class="section-kicker">O‘QITUVCHI PANELI</span><p></p><a href="{% url 'create_course' user.id%}" class="btn-primary-glow">Kurs yaratish →</a><h2>Yaratilgan kurslar</h2><p class="section-subtitle">Kurslaringiz va o‘quv materiallaringizni boshqaring.</p></div></div>
-<div class="empty-state"><span class="empty-state-icon">✦</span><h3>Kurs boshqaruvi</h3><p>Yangi dars qo‘shish uchun mavjud kurs sahifasini oching.</p><a href="{% url 'courses' %}" class="btn-primary-glow">Kurslarni ko‘rish →</a></div>
+<div class="empty-state"><span class="empty-state-icon">✦</span><h3>Kurs boshqaruvi</h3>
+    <p><div class="row g-4">
+        {% for i in course %}
+        {% if i.teacher == user %}
+        <div class="col-md-6 col-xl-4"><article class="course-card h-100"><div class="course-card-art"><span class="art-label">ONLINE COURSE</span><span class="art-symbol">✧</span><span class="art-index">{% if forloop.counter < 10 %}0{% endif %}{{ forloop.counter }}</span></div><div class="course-card-body"><div class="course-card-tags"><span class="tag-pill">{% if i.is_active %}Faol kurs{% else %}Faol emas{% endif %}</span></div><h3>{{ i.name }}</h3><p>{{ i.description|truncatewords:24 }}</p><div class="card-bottom"><span class="teacher-label">O‘qituvchi: {{ i.teacher }}</span><a href="{% url 'course_detail' i.id %}" class="card-arrow" aria-label="Kursni ochish">→</a></div></div></article></div>
+        {% endif %}
+        {% empty %}
+        <div class="col-12"><div class="empty-state"><span class="empty-state-icon">✦</span><h3>Empty</h3><p>Yangi kurslar qoshsiz mumkin</p></div></div>
+        {% endfor %}
+        </div></p>
+</div>
 {% else %}
 <div class="section-topline"><div><span class="section-kicker">SIZNING TA’LIMINGIZ</span><h2>Mening kurslarim</h2><p class="section-subtitle">Yozilgan kurslaringizni davom ettiring.</p></div><a href="{% url 'courses' %}" class="text-link">Kurslarni ko‘rish →</a></div>
 <div class="row g-4">{% for i in enroll %}{% if i.student == user %}<div class="col-md-6 col-xl-4"><article class="course-card h-100"><div class="course-card-art"><span class="art-label">YOUR LEARNING</span><span class="art-symbol">✦</span></div><div class="course-card-body"><h3>{{ i.course }}</h3><p>{{ i.course.description|truncatewords:20 }}</p><div class="card-bottom"><span class="teacher-label">O‘qituvchi: {{ i.course.teacher }}</span><a href="{% url 'course_detail' i.course.id %}" class="card-arrow" aria-label="Kursni ochish">→</a></div></div></article></div>{% endif %}{% empty %}<div class="col-12"><div class="empty-state"><span class="empty-state-icon">✦</span><h3>Siz hali kursga yozilmagansiz</h3><p>Katalogdan o‘zingizga mos kursni tanlang.</p><a href="{% url 'courses' %}" class="btn-primary-glow">Kurslarni ko‘rish →</a></div></div>{% endfor %}</div>

@@ -6,6 +6,7 @@
 {% if user.is_authenticated %}
     {% if user == course.teacher %}
         <a href="{% url 'create_lesson' course.id %}" class="course-button">+ Dars qo‘shish</a>
+        <a href="{% url 'delete_course' course.id %}" class="btn btn-danger rounded-5 px-20">- Coursni O`chirish</a>
     {% else %}
         {% if is_enrolled %}<div class="enrolled-message">✓ Siz kursga yozilgansiz</div>
         {% elif user.role == 'Teacher'%}
